@@ -1,0 +1,22 @@
+# IDEA IDE settings directory
+.idea/
+
+# Dependency directories
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Coverage directory used by istanbul
+coverage/
+
+# nyc test coverage
+.nyc_output/
+
+# private configurations
+#secrets.json
+
+# backup of sql schema
+app-schema.mwb.bak
