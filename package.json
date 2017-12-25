@@ -20,7 +20,6 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "mocha": "^3.4.1",
-    "mockgoose": "7.3.1",
     "nodemon": "1.11.0",
     "nyc": "^10.3.2",
     "sinon": "^2.2.0"
