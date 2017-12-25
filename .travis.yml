@@ -1,0 +1,23 @@
+sudo: required
+dist: trusty
+language: node_js
+
+services:
+#  - docker
+  - mysql
+
+node_js:
+  - "6.10.2"
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+env:
+  - TRAVIS=travis CXX=g++-4.8
+
+script:
+  - npm run ci:travis

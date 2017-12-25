@@ -1,0 +1,19 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "env"          : {
+    "es6"  : true,
+    "node" : true,
+    "mocha": true
+  },
+  "extends"      : "airbnb-base",
+  "rules"        : {
+    "no-multi-spaces"     : "off",
+    "key-spacing"         : "off",
+    "object-curly-spacing": "off",
+    "arrow-parens": ["warn", "as-needed"],
+    "max-len": ["error", 140],
+    "prefer-destructuring": "off"
+  }
+}

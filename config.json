@@ -1,19 +1,9 @@
 {
-  "express"      : {
+  "express": {
     "protocol": "http",
     "port"    : 8001
   },
-  "mongodb"      : {
-    "port"    : 27017,
-    "host"    : "mongo",
-    "database": "test"
-  },
-  "elasticsearch": {
-    "port": 9200,
-    "host": "localhost",
-    "log" : "trace"
-  },
-  "mysql"        : {
+  "mysql"  : {
     "port"    : 3306,
     "host"    : "mariadb",
     "database": "mydb"

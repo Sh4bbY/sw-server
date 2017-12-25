@@ -5,15 +5,20 @@
   "main": "index.js",
   "scripts": {
     "start": "DEBUG=socket.io* nodemon index.js 'src/**/*.js'",
-    "test": "nyc mocha --timeout 60000 --recursive src",
-    "test:watch": "nyc mocha --watch --timeout 60000 --recursive src",
-    "lint": "jshint src"
+    "test": "mocha --timeout 60000 --recursive src",
+    "test:watch": "mocha --watch --timeout 60000 --recursive src",
+    "test:coverage": "nyc mocha --timeout 60000 --recursive src",
+    "lint": "eslint src",
+    "ci:travis": "npm run lint && npm run test"
   },
   "license": "MIT",
   "devDependencies": {
     "chai": "3.5.0",
     "chai-http": "3.0.0",
-    "jshint": "2.9.4",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "mocha": "^3.4.1",
     "mockgoose": "7.3.1",
     "nodemon": "1.11.0",
@@ -38,10 +43,16 @@
     ],
     "reporter": [
       "html",
+      "text",
       "text-summary"
     ],
     "exclude": [
       "src/**/*.spec.js"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
