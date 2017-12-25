@@ -1,3 +1,5 @@
+'use strict';
+
 const assert = require('chai').assert;
 const sinon  = require('sinon');
 const logger = require('log4js').getLogger('server');

@@ -1,3 +1,5 @@
+'use strict';
+
 const Joi             = require('joi');
 const jwt             = require('jsonwebtoken');
 const logger          = require('log4js').getLogger('server');

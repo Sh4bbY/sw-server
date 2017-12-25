@@ -1,3 +1,5 @@
+'use strict';
+
 const Joi = require('joi');
 const logger = require('log4js').getLogger('server');
 

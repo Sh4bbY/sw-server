@@ -1,3 +1,5 @@
+'use strict';
+
 const assert   = require('assert');
 const logger   = require('log4js').getLogger('server');
 const chai     = require('chai');
