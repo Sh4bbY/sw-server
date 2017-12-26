@@ -3,9 +3,12 @@
     "protocol": "http",
     "port"    : 8001
   },
-  "mysql"  : {
+  "sql"    : {
     "port"    : 3306,
-    "host"    : "mariadb",
-    "database": "mydb"
+    "host"    : "localhost",
+    "dialect" : "mysql",
+    "database": "mydb",
+    "username": "admin",
+    "password": "my-secret-pw"
   }
 }

@@ -40,14 +40,14 @@ class Server {
     return new Promise((resolve, reject) => {
       this.registerMiddleware();
 
-      Object.keys(this.client).forEach(key => this.client[key].connect());
-      this.server = this.config.protocol === 'https' ? https.createServer(this.app) : http.createServer(this.app);
+      const promisedClientConnections = Object.keys(this.client).map(key => this.client[key].connect());
+      this.server                     = this.config.protocol === 'https' ? https.createServer(this.app) : http.createServer(this.app);
       this.server.listen(this.config.port, () => {
         logger.info(`Server is started and listening on port ${this.config.port}`);
 
         this.connectionCb.forEach(cb => cb());
 
-        return resolve(this.server);
+        return Promise.all(promisedClientConnections).then(() => resolve(this.server));
       });
       this.server.on('error', err => {
         logger.error('Server Error: ', err.message);

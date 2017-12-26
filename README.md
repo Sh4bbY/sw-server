@@ -7,7 +7,17 @@ a node and express based backend application.
 
 ## Getting started
 
+#### Setup MySql Docker Container:
+- install docker
+- run `docker build -t sw/mysql ./docker/mysql` to Build a docker sw/mysql image.
+- run `docker run -d --name sql -p 3306:3306 sw/mysql` to run a sql container from the image.
+- run `yarn migrate` to install sql orm mappings.
+
+        
+
 This project is using yarn for dependency management. Install yarn by `npm i -g yarn`.
+
+
 
 npm tasks:
 

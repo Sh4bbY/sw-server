@@ -3,17 +3,15 @@
 const Joi             = require('joi');
 const jwt             = require('jsonwebtoken');
 const logger          = require('log4js').getLogger('server');
-// const bcrypt          = require('bcrypt');
 const AbstractService = require('./AbstractService');
-
 
 module.exports = class AuthService extends AbstractService {
   constructor(server) {
     super(server);
 
-    this.router.post('/api/login', this.constructor.handleLogin.bind(this));
-    this.router.post('/api/register', this.constructor.handleRegistration.bind(this));
-    this.router.get('/api/logout', this.constructor.handleLogout.bind(this));
+    this.router.post('/api/login', AuthService.handleLogin.bind(this));
+    this.router.post('/api/register', AuthService.handleRegistration.bind(this));
+    this.router.get('/api/logout', AuthService.handleLogout.bind(this));
   }
 
   static handleLogin(req, res) {
@@ -56,7 +54,7 @@ module.exports = class AuthService extends AbstractService {
       password_confirm: Joi.string().min(6).required(),
     }).required().options({abortEarly: false});
 
-    if (!this.constructor.hasValidParams(req.body, schema)) {
+    if (!AuthService.hasValidParams(req.body, schema)) {
       return res.status(400).send('invalid parameters');
     }
 
@@ -66,11 +64,8 @@ module.exports = class AuthService extends AbstractService {
 
     logger.debug('received valid registration request');
 
-    return res.json({
-      id   : 1,
-      name : 'test',
-      email: 'test@test.de',
-    });
+    return this.server.client.sql.registerUser(req.body)
+      .then(result => res.json(result));
   }
 
   createTokenResponse(payload) {

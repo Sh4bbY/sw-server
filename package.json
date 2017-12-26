@@ -2,14 +2,16 @@
   "name": "@software-wanted/server",
   "version": "1.0.0",
   "description": "Express based backend application",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "nodemon index.js 'src/**/*.js'",
-    "test": "mocha --timeout 60000 --recursive src",
-    "test:watch": "mocha --watch --timeout 60000 --recursive src",
-    "test:coverage": "nyc mocha --timeout 60000 --recursive src",
+    "test": "mocha --timeout 10000 --recursive src",
+    "test:watch": "npm run test -- --watch",
+    "test:coverage": "nyc npm run test",
     "lint": "eslint src",
-    "ci:travis": "npm run lint && npm run test"
+    "ci:travis": "npm run lint && npm run test",
+    "migrate": "node ./migration.js --mode=up",
+    "migrate:drop": "node ./migration.js --mode=drop"
   },
   "license": "MIT",
   "devDependencies": {
@@ -22,7 +24,8 @@
     "mocha": "^3.4.1",
     "nodemon": "1.11.0",
     "nyc": "^10.3.2",
-    "sinon": "^2.2.0"
+    "sinon": "^2.2.0",
+    "yargs": "^10.0.3"
   },
   "dependencies": {
     "bcrypt": "1.0.2",
@@ -33,7 +36,9 @@
     "express-session": "^1.15.6",
     "joi": "^10.4.2",
     "jsonwebtoken": "^8.1.0",
-    "log4js": "1.1.1"
+    "log4js": "1.1.1",
+    "mysql2": "^1.5.1",
+    "sequelize": "^4.28.6"
   },
   "nyc": {
     "all": true,

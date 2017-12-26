@@ -10,6 +10,14 @@ chai.use(chaiHttp);
 const Server      = require('../Server');
 const AuthService = require('./AuthService');
 
+const sqlClientMock = {
+  connect     : () => Promise.resolve(),
+  disconnect  : () => Promise.resolve(),
+  registerUser: () => Promise.resolve({
+    id: 1,
+  }),
+};
+
 const config = {
   express: {
     protocol : 'http',
@@ -26,7 +34,7 @@ const config = {
 logger.setLevel('off');
 
 const validUser = {
-  name    : 'test-user',
+  username: 'test-user',
   email   : 'test@user.de',
   password: 'test-password',
 };
@@ -36,20 +44,23 @@ describe('AuthService', () => {
   let service;
   let token;
 
-  before(() => {
+  before(done => {
     server  = new Server(config.express);
     service = new AuthService(server);
+    server.registerClient('sql', sqlClientMock);
     server.registerService(service);
-    server.start();
+    server.start()
+      .then(() => done())
+      .catch(err => done(err));
   });
 
   after(() => server.stop());
 
-  xdescribe('handleRegistration', () => {
+  describe('handleRegistration', () => {
     it('should return status 400 if the request was invalid', done => {
       const body = {};
       chai.request(server.app)
-        .post('/api/registration')
+        .post('/api/register')
         .send(body)
         .end((err, res) => {
           assert.equal(res.status, 400);
@@ -59,13 +70,13 @@ describe('AuthService', () => {
 
     it('should return status 400 if passwords do not match', done => {
       const body = {
-        name            : validUser.name,
+        username        : validUser.username,
         email           : validUser.email,
         password        : 'passwordA',
         password_confirm: 'passwordB',
       };
       chai.request(server.app)
-        .post('/api/registration')
+        .post('/api/register')
         .send(body)
         .end((err, res) => {
           assert.equal(res.status, 400);
@@ -75,13 +86,13 @@ describe('AuthService', () => {
 
     it('should return status 200 if request was valid', done => {
       const body = {
-        name            : validUser.name,
+        username        : validUser.username,
         email           : validUser.email,
         password        : validUser.password,
         password_confirm: validUser.password,
       };
       chai.request(server.app)
-        .post('/api/registration')
+        .post('/api/register')
         .send(body)
         .end((err, res) => {
           assert.equal(res.status, 200);
@@ -89,7 +100,7 @@ describe('AuthService', () => {
         });
     });
 
-    it('should return status 406 - Not Acceptable if user name or email is already registered', done => {
+    xit('should return status 406 - Not Acceptable if user name or email is already registered', done => {
       const body = {
         name            : 'dummy',
         email           : validUser.email,
@@ -153,30 +164,6 @@ describe('AuthService', () => {
         .send(body)
         .end((err, res) => {
           token = res.body.token;
-          assert.equal(res.status, 200);
-          done();
-        });
-    });
-  });
-
-  xdescribe('handleLoginByToken', () => {
-    it('should return status 400 if an invalid token was sent', done => {
-      const body = {token: 'someInvalidToken'};
-      chai.request(server.app)
-        .post('/api/loginByToken')
-        .send(body)
-        .end((err, res) => {
-          assert.equal(res.status, 400);
-          done();
-        });
-    });
-
-    it('should return status 200 if an valid token was sent', done => {
-      const body = {token};
-      chai.request(server.app)
-        .post('/api/loginByToken')
-        .send(body)
-        .end((err, res) => {
           assert.equal(res.status, 200);
           done();
         });
