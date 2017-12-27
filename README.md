@@ -1,6 +1,6 @@
 # @software-wanted/server
 
-[![Build Status](https://travis-ci.org/Sh4bbY/sw-server.svg?branch=master)](https://travis-ci.org/Sh4bbY/node) 
+[![Build Status](https://travis-ci.org/Sh4bbY/sw-server.svg?branch=master)](https://travis-ci.org/Sh4bbY/sw-server) 
 ![License MIT](https://img.shields.io/badge/license-MIT-green.svg) 
 
 a node and express based backend application.
