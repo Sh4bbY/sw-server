@@ -4,7 +4,7 @@
   "description": "Express based backend application",
   "main": "index.js",
   "scripts": {
-    "start": "DEBUG=socket.io* nodemon index.js 'src/**/*.js'",
+    "start": "nodemon index.js 'src/**/*.js'",
     "test": "mocha --timeout 60000 --recursive src",
     "test:watch": "mocha --watch --timeout 60000 --recursive src",
     "test:coverage": "nyc mocha --timeout 60000 --recursive src",
