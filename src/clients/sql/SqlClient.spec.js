@@ -36,14 +36,12 @@ describe('SqlClient', () => {
   describe('registerUser', () => {
     it('should register a user successfully', done => {
       const user = {
-        firstName: 'John',
-        lastName : 'Doe',
-        userName : 'Johnny',
-        email    : 'john@doe.com',
-        password : 'johns-secret-pass',
+        username    : 'Johnny',
+        email       : 'john@doe.com'
       };
+      const hash = 'johns-secret-pass-hash-123123213';
 
-      client.registerUser(user)
+      client.registerUser(user, hash)
         .then(result => {
           assert.equal(result.id, 1);
           assert.equal(result.isActive, true);

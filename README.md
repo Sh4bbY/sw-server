@@ -9,6 +9,7 @@ a node and express based backend application.
 
 #### Setup MySql Docker Container:
 - install docker
+- run `docker pull mysql:5.7` to get the 5.7 version of the mysql docker image.
 - run `docker build -t sw/mysql ./docker/mysql` to Build a docker sw/mysql image.
 - run `docker run -d --name sql -p 3306:3306 sw/mysql` to run a sql container from the image.
 - run `yarn migrate` to install sql orm mappings.
@@ -28,6 +29,8 @@ yarn test:watch     // runs mocha in watch mode
 yarn test:coverage  // runs mocha and generate code coverage reports
 yarn lint           // runs eslint static code quality checks
 yarn ci:travis      // runs the lint and test task (triggered by travis-ci.org)
+yarn migrate        // migrate the database
+yarn migrate:drop   // drops the database migration
 ```
 
 ## Contributing

@@ -1,11 +1,9 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const bcrypt    = require('bcrypt');
 const User      = require('./models/User');
 const Project   = require('./models/Project');
-
-const SALT_ROUNDS = 10;
+const logger    = require('log4js').getLogger('SqlClient');
 
 module.exports = class SqlClient {
   constructor(config) {
@@ -35,19 +33,28 @@ module.exports = class SqlClient {
         User.defineModel(this.sequelize);
         Project.defineModel(this.sequelize);
         return Promise.resolve();
+      })
+      .catch(err => {
+        logger.error('Could not authenticate with sql server, reason: ', err.message);
       });
   }
 
-  registerUser(user) {
-    return bcrypt.genSalt(SALT_ROUNDS)
-      .then(salt => bcrypt.hash(user.password, salt))
-      .then(hash => this.sequelize.models.User.build({
-        firstName   : user.firstName,
-        lastName    : user.lastName,
-        userName    : user.userName,
-        email       : user.email,
-        passwordHash: hash,
-      }).save())
+  checkToken(token) {
+    // TODO: implement check if token is revoked
+    return Promise.resolve(true);
+  }
+
+  registerUser(user, hash) {
+    return this.sequelize.models.User.build({
+      userName    : user.username,
+      email       : user.email,
+      passwordHash: hash,
+    }).save()
+      .then(result => result.dataValues);
+  }
+
+  getUserByEmail(email) {
+    return this.sequelize.models.User.findOne({where: {email}})
       .then(result => result.dataValues);
   }
 

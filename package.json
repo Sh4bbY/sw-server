@@ -4,7 +4,7 @@
   "description": "Express based backend application",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon index.js 'src/**/*.js'",
+    "start": "nodemon ./src/index.js 'src/**/*.js'",
     "test": "mocha --timeout 10000 --recursive src",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "nyc npm run test",
@@ -34,6 +34,7 @@
     "express": "^4.16.2",
     "express-bearer-token": "^2.1.1",
     "express-session": "^1.15.6",
+    "helmet": "^3.9.0",
     "joi": "^10.4.2",
     "jsonwebtoken": "^8.1.0",
     "log4js": "1.1.1",

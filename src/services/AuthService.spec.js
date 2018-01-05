@@ -11,11 +11,10 @@ const Server      = require('../Server');
 const AuthService = require('./AuthService');
 
 const sqlClientMock = {
-  connect     : () => Promise.resolve(),
-  disconnect  : () => Promise.resolve(),
-  registerUser: () => Promise.resolve({
-    id: 1,
-  }),
+  connect       : () => Promise.resolve(),
+  disconnect    : () => Promise.resolve(),
+  registerUser  : () => Promise.resolve({id: 1}),
+  getUserByEmail: (email) => email === 'non-existing-user' ? Promise.reject() : Promise.resolve(),
 };
 
 const config = {

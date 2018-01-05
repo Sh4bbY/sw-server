@@ -17,6 +17,9 @@
     "max-len": ["error", 140],
     "prefer-destructuring": "off",
     "object-shorthand": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "no-unused-vars": "warn",
+    "class-methods-use-this": "warn",
+    "consistent-return": "warn"
   }
 }

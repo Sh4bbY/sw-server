@@ -9,6 +9,7 @@ const logger      = require('log4js').getLogger('server');
 const Joi         = require('joi');
 const http        = require('http');
 const https       = require('https');
+const helmet      = require('helmet');
 
 const configSchema = Joi.object().keys({
   protocol     : Joi.string().valid('http', 'https').required(),
@@ -24,12 +25,12 @@ class Server {
       validation.error.details.forEach(err => logger.error(err.message));
       throw new Error('Invalid Configuration', validation.error);
     }
-    this.config       = config;
-    this.app          = express();
-    this.router       = express.Router();
-    this.services     = [];
-    this.connectionCb = [];
-    this.client       = {};
+    this.config              = config;
+    this.app                 = express();
+    this.router              = express.Router();
+    this.services            = [];
+    this.connectionCallbacks = [];
+    this.client              = {};
   }
 
   /**
@@ -40,18 +41,24 @@ class Server {
     return new Promise((resolve, reject) => {
       this.registerMiddleware();
 
-      const promisedClientConnections = Object.keys(this.client).map(key => this.client[key].connect());
-      this.server                     = this.config.protocol === 'https' ? https.createServer(this.app) : http.createServer(this.app);
+      // start registered clients
+      const promisedClientConnections = Object.keys(this.client)
+        .map(key => this.client[key].connect().then(() => logger.debug(`successfully started client "${key}"`)));
+
+      // start the server
+      this.server = this.config.protocol === 'https' ? https.createServer(this.app) : http.createServer(this.app);
       this.server.listen(this.config.port, () => {
-        logger.info(`Server is started and listening on port ${this.config.port}`);
-
-        this.connectionCb.forEach(cb => cb());
-
-        return Promise.all(promisedClientConnections).then(() => resolve(this.server));
+        // execute registered onConnection callbacks
+        this.connectionCallbacks.forEach(cb => cb());
+        return Promise.all(promisedClientConnections).then(() => {
+          logger.info(`Server is started and listening on port ${this.config.port}`);
+          resolve(this.server);
+        });
       });
+
       this.server.on('error', err => {
         logger.error('Server Error: ', err.message);
-        return reject(err.message);
+        reject(err.message);
       });
 
       process.on('SIGTERM', this.stop.bind(this, true));    // listen for TERM signal .e.g. kill
@@ -85,7 +92,7 @@ class Server {
   }
 
   onConnection(handler) {
-    this.connectionCb.push(handler);
+    this.connectionCallbacks.push(handler);
   }
 
   /**
@@ -106,6 +113,7 @@ class Server {
   }
 
   registerMiddleware() {
+    this.app.use(helmet());
     this.app.use(bearerToken());
     if (this.config.sessionSecret) {
       this.app.use(session({
@@ -123,7 +131,7 @@ class Server {
     this.app.use(this.constructor.errorHandler);
   }
 
-  static errorHandler(err, req, res) {
+  static errorHandler(err, req, res, next) {
     let status = 500;
     if (err.name === 'UnauthorizedError') { // error from express-jwt middleware
       status = 401;
